@@ -3,80 +3,69 @@ const { validate } = require('jsonschema');
 
 // app imports
 const { User, Story } = require('../models');
-const {
-  ensureCorrectUser,
-  formatResponse,
-  validateSchema
-} = require('../helpers');
+const { APIError, formatResponse, validateSchema } = require('../helpers');
 const { storyNewSchema, storyUpdateSchema } = require('../schemas');
 
-function createStory(request, response, next) {
-  const validSchema = validateSchema(
-    validate(request.body, storyNewSchema),
-    'story'
-  );
-  if (validSchema !== 'OK') {
-    return next(validSchema);
+async function createStory(request, response, next) {
+  try {
+    validateSchema(validate(request.body, storyNewSchema), 'story');
+
+    const username = request.username;
+    await User.readUser(username);
+
+    const newStory = await Story.createStory(new Story(request.body));
+    return response.status(201).json(formatResponse(newStory));
+  } catch (error) {
+    return next(error);
   }
-  const { username } = request.body.data;
-  const correctUser = ensureCorrectUser(
-    request.headers.authorization,
-    username
-  );
-  if (correctUser !== 'OK') {
-    throw correctUser;
-  }
-  return User.readUser(username)
-    .then(() => Story.createStory(new Story(request.body.data)))
-    .then(story => response.status(201).json(formatResponse(story)))
-    .catch(err => next(err));
 }
 
-function readStory(request, response, next) {
-  return Story.readStory(request.params.storyId)
-    .then(story => response.json(formatResponse(story)))
-    .catch(err => next(err));
+async function readStory(request, response, next) {
+  try {
+    const story = await Story.readStory(request.params.storyId);
+    return response.json(formatResponse(story));
+  } catch (error) {
+    return next(error);
+  }
 }
 
-function updateStory(request, response, next) {
-  const { storyId } = request.params;
-  const validSchema = validateSchema(
-    validate(request.body, storyUpdateSchema),
-    'story'
-  );
-  if (validSchema !== 'OK') {
-    return next(validSchema);
-  }
-  return Story.readStory(storyId)
-    .then(story => {
-      const correctUser = ensureCorrectUser(
-        request.headers.authorization,
-        story.username
+async function updateStory(request, response, next) {
+  try {
+    validateSchema(validate(request.body, storyUpdateSchema), 'story');
+
+    const { storyId } = request.params;
+
+    const storyCheck = await Story.readStory(storyId);
+    if (request.username !== storyCheck.username) {
+      throw new APIError(
+        403,
+        'Forbidden',
+        'You are not the user who posted this story so you cannot update it.'
       );
-      if (correctUser !== 'OK') {
-        throw correctUser;
-      }
-    })
-    .then(() => Story.updateStory(storyId, request.body.data))
-    .then(story => response.json(formatResponse(story)))
-    .catch(err => next(err));
+    }
+    const updatedStory = await Story.updateStory(storyId, request.body);
+    return response.json(formatResponse(updatedStory));
+  } catch (error) {
+    return next(error);
+  }
 }
 
-function deleteStory(request, response, next) {
-  const { storyId } = request.params;
-  return Story.readStory(storyId)
-    .then(story => {
-      const correctUser = ensureCorrectUser(
-        request.headers.authorization,
-        story.username
+async function deleteStory(request, response, next) {
+  try {
+    const { storyId } = request.params;
+    const storyCheck = await Story.readStory(storyId);
+    if (storyCheck.username !== request.username) {
+      throw new APIError(
+        403,
+        'Forbidden',
+        'You did not post that story so you are not allowed to delete it.'
       );
-      if (correctUser !== 'OK') {
-        throw correctUser;
-      }
-    })
-    .then(() => Story.deleteStory(storyId))
-    .then(story => response.json(formatResponse(story)))
-    .catch(err => next(err));
+    }
+    const deletedMsg = await Story.deleteStory(storyId);
+    return response.json(formatResponse(deletedMsg));
+  } catch (error) {
+    return next(error);
+  }
 }
 
 module.exports = { createStory, readStory, updateStory, deleteStory };

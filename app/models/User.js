@@ -40,6 +40,7 @@ userSchema.statics = {
           `There is already a user with username '${user.username}'.`
         );
       }
+
       const hashed = await bcrypt.hash(newUser.password, SALT_WORK_FACTOR);
       newUser.password = hashed;
       const savedUser = await newUser.save();
@@ -79,9 +80,9 @@ userSchema.statics = {
    * @param {String} username
    * @returns {Promise<User, APIError>}
    */
-  async readUser(username) {
+  async readUser(username, fields = { password: 0 }) {
     try {
-      const user = await this.findOne({ username }, { password: 0 })
+      const user = await this.findOne({ username }, fields)
         .populate('favorites')
         .populate('stories')
         .exec();

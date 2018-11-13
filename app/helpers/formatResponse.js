@@ -9,7 +9,7 @@ function formatResponse(json) {
     .reduce((obj, k) => {
       obj[k] = json[k];
       return obj;
-    });
+    }, {});
 }
 
 module.exports = formatResponse;

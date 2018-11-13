@@ -48,80 +48,64 @@ const fourOhFour = 'asdfasdfsaf';
 let fourOhFourToken;
 
 let token1;
-let authHeader1;
 let token2;
-let authHeader2;
 
 beforeEach((transaction, done) => {
   transaction.request.headers['Content-Type'] = 'application/json';
   return done();
 });
 
-before(
-  'Auth > Authorize to Receive a Token > Example 1',
-  (transaction, done) => {
-    const { protocol, host, port } = transaction;
-    axios.defaults.baseURL = `${protocol}//${host}:${port}`;
-    return axios
-      .post('/users', testUser1)
-      .then(() => (transaction.request.body = JSON.stringify(testUser1)))
-      .then(() => done())
-      .catch(err => {
-        console.log(err.response.data);
-        return done();
-      });
-  }
-);
+before('Login > Login to Receive a Token > Example 1', (transaction, done) => {
+  const { protocol, host, port } = transaction;
+  axios.defaults.baseURL = `${protocol}//${host}:${port}`;
+  return axios
+    .post('/users', testUser1)
+    .then(() => (transaction.request.body = JSON.stringify(testUser1)))
+    .then(() => done())
+    .catch(err => {
+      console.log(err.response.data);
+      return done();
+    });
+});
 
-after('Auth > Authorize to Receive a Token > Example 1', function(
+after('Login > Login to Receive a Token > Example 1', function(
   transaction,
   done
 ) {
   const body = JSON.parse(transaction.real.body);
   token1 = body.token;
-  authHeader1 = `Bearer ${token1}`;
   return done();
 });
 
 // 400
-before(
-  'Auth > Authorize to Receive a Token > Example 2',
-  (transaction, done) => {
-    transaction.request.body = JSON.stringify(badRequest);
-    return done();
-  }
-);
+before('Login > Login to Receive a Token > Example 2', (transaction, done) => {
+  transaction.request.body = JSON.stringify(badRequest);
+  return done();
+});
 
 // 401
-before(
-  'Auth > Authorize to Receive a Token > Example 3',
-  (transaction, done) => {
-    const badUser = { data: { username: testUsername1, password: 'wrong' } };
-    transaction.request.body = JSON.stringify(badUser);
-    return done();
-  }
-);
+before('Login > Login to Receive a Token > Example 3', (transaction, done) => {
+  const badUser = { data: { username: testUsername1, password: 'wrong' } };
+  transaction.request.body = JSON.stringify(badUser);
+  return done();
+});
 
 // 404
-before(
-  'Auth > Authorize to Receive a Token > Example 4',
-  (transaction, done) => {
-    const newUser = { data: { username: 'bill', password: 'who cares' } };
-    transaction.request.body = JSON.stringify(newUser);
-    return done();
-  }
-);
+before('Login > Login to Receive a Token > Example 4', (transaction, done) => {
+  const newUser = { data: { username: 'bill', password: 'who cares' } };
+  transaction.request.body = JSON.stringify(newUser);
+  return done();
+});
 
 // GET /users
 // 200
 before('Users > Get a List of Users > Example 1', (transaction, done) => {
-  transaction.request.headers['Authorization'] = authHeader1;
+  transaction.fullPath = transaction.fullPath + '?token=' + token1;
   return done();
 });
 //400
 before('Users > Get a List of Users > Example 2', (transaction, done) => {
-  transaction.request.headers['Authorization'] = authHeader1;
-  transaction.fullPath = '/users?limit=foo';
+  transaction.fullPath = '/users?limit=foo' + '?token=' + token1;
   return done();
 });
 // 401
@@ -143,7 +127,6 @@ after('Users > Create a New User > Example 1', (transaction, done) => {
     })
     .then(res => {
       token2 = res.token;
-      authHeader2 = `Bearer ${token2}`;
       return done();
     })
     .catch(err => {
@@ -165,39 +148,34 @@ before('Users > Create a New User > Example 3', (transaction, done) => {
 // GET /users/:username
 // 200
 before('User > Get a User > Example 1', (transaction, done) => {
-  transaction.request.headers['Authorization'] = authHeader2;
-  transaction.fullPath = `/users/${testUsername2}`;
+  transaction.fullPath = `/users/${testUsername2}?token=${token2}`;
   return done();
 });
 // 401
 before('User > Get a User > Example 2', (transaction, done) => {
-  transaction.fullPath = `/users/${testUsername2}`;
+  transaction.fullPath = `/users/${testUsername2}?token=foo`;
   return done();
 });
 // 404
 before('User > Get a User > Example 3', (transaction, done) => {
-  transaction.request.headers['Authorization'] = authHeader2;
-  transaction.fullPath = `/users/${fourOhFour}`;
+  transaction.fullPath = `/users/${fourOhFour}?token=${token2}`;
   return done();
 });
 
 // PATCH /users/:username
 // 200
 before('User > Update a User > Example 1', (transaction, done) => {
-  transaction.request.headers['Authorization'] = authHeader2;
   transaction.fullPath = `/users/${testUsername2}`;
   transaction.request.body = JSON.stringify({
-    data: {
-      name: 'Whiskey Lane'
-    }
+    token: token2,
+    name: 'Whiskey Lane'
   });
   return done();
 });
 // 400
 before('User > Update a User > Example 2', (transaction, done) => {
-  transaction.request.headers['Authorization'] = authHeader2;
   transaction.fullPath = `/users/${testUsername2}`;
-  transaction.request.body = JSON.stringify(badRequest);
+  transaction.request.body = JSON.stringify({ ...badRequest, token: token2 });
   return done();
 });
 // 401
@@ -209,29 +187,24 @@ before('User > Update a User > Example 4', (transaction, done) => {
   return axios
     .post(
       `/users`,
-      { data: { name: 'fourOhFour', username: fourOhFour, password: '404' } },
+      { name: 'fourOhFour', username: fourOhFour, password: '404' },
       { headers: { 'Content-Type': 'application/json' } }
     )
     .then(() => {
       return axios.post(
-        '/auth',
-        { data: { username: fourOhFour, password: '404' } },
+        '/login',
+        { username: fourOhFour, password: '404' },
         { headers: { 'Content-Type': 'application/json' } }
       );
     })
     .then(res => {
-      fourOhFourToken = `Bearer ${res.token}`;
       return axios
-        .delete(`/users/${fourOhFour}`, {
-          headers: { Authorization: fourOhFourToken }
-        })
+        .delete(`/users/${fourOhFour}`, { token: res.token })
         .then(() => {
-          transaction.request.headers['Authorization'] = fourOhFourToken;
           transaction.fullPath = `/users/${fourOhFour}`;
           transaction.request.body = JSON.stringify({
-            data: {
-              name: 'Whiskey Lane'
-            }
+            token: res.token,
+            name: 'Whiskey Lane'
           });
           return done();
         })
@@ -249,19 +222,19 @@ before('User > Update a User > Example 4', (transaction, done) => {
 // DELETE /users/:username
 // 200
 before('User > Delete a User > Example 1', (transaction, done) => {
-  transaction.request.headers['Authorization'] = authHeader2;
+  transaction.request.body.token = token2;
   transaction.fullPath = `/users/${testUsername2}`;
   return done();
 });
 // 401
 before('User > Delete a User > Example 2', (transaction, done) => {
-  transaction.request.headers['Authorization'] = authHeader2;
+  transaction.request.body.token = token2;
   transaction.fullPath = `/users/${testUsername1}`;
   return done();
 });
 // 404
 before('User > Delete a User > Example 3', (transaction, done) => {
-  transaction.request.headers['Authorization'] = fourOhFourToken;
+  transaction.request.body.token = fourOhFourToken;
   transaction.fullPath = `/users/${fourOhFour}`;
   return done();
 });
@@ -272,15 +245,18 @@ before(
   'User Favorites > Add a New Favorite > Example 1',
   (transaction, done) => {
     return axios
-      .post('/stories', testStory1, {
-        headers: {
-          Authorization: authHeader1,
-          'Content-Type': 'application/json'
+      .post(
+        '/stories',
+        { token: token1, ...testStory1 },
+        {
+          headers: {
+            'Content-Type': 'application/json'
+          }
         }
-      })
+      )
       .then(res => {
         testStory1Id = res.storyId;
-        transaction.request.headers['Authorization'] = authHeader1;
+        transaction.request.body.token = token1;
         transaction.fullPath = `/users/${testUsername1}/favorites/${testStory1Id}`;
         return done();
       })
@@ -303,7 +279,7 @@ before(
 before(
   'User Favorites > Add a New Favorite > Example 3',
   (transaction, done) => {
-    transaction.request.headers['Authorization'] = authHeader1;
+    transaction.request.body.token = token1;
     transaction.fullPath = `/users/${testUsername1}/favorites/${fourOhFour}`;
     return done();
   }
@@ -314,7 +290,7 @@ before(
 before(
   'User Favorites > Delete a User Favorite > Example 1',
   (transaction, done) => {
-    transaction.request.headers['Authorization'] = authHeader1;
+    transaction.request.body.token = token1;
     transaction.fullPath = `/users/${testUsername1}/favorites/${testStory1Id}`;
     return done();
   }
@@ -331,7 +307,7 @@ before(
 before(
   'User Favorites > Delete a User Favorite > Example 3',
   (transaction, done) => {
-    transaction.request.headers['Authorization'] = authHeader1;
+    transaction.request.body.token = token1;
     transaction.fullPath = `/users/${testUsername1}/favorites/${fourOhFour}`;
     return done();
   }
@@ -351,8 +327,7 @@ before('Stories > Get a List of Stories > Example 2', (transaction, done) => {
 // POST /stories
 // 201
 before('Stories > Create a New Story > Example 1', (transaction, done) => {
-  transaction.request.headers['Authorization'] = authHeader1;
-  transaction.request.body = JSON.stringify(testStory2);
+  transaction.request.body = JSON.stringify({ token: token1, ...testStory2 });
   return done();
 });
 after('Stories > Create a New Story > Example 1', (transaction, done) => {
@@ -362,8 +337,7 @@ after('Stories > Create a New Story > Example 1', (transaction, done) => {
 });
 // 400
 before('Stories > Create a New Story > Example 2', (transaction, done) => {
-  transaction.request.headers['Authorization'] = authHeader1;
-  transaction.request.body = JSON.stringify(badRequest);
+  transaction.request.body = JSON.stringify({ token: token1, ...badRequest });
   return done();
 });
 // 401
@@ -388,29 +362,31 @@ before('Story > Get a Story > Example 2', (transaction, done) => {
 //200
 before('Story > Update a Story > Example 1', (transaction, done) => {
   transaction.fullPath = `/stories/${testStory2Id}`;
-  transaction.request.headers['Authorization'] = authHeader1;
-  transaction.request.body = JSON.stringify({ data: { author: 'Whiskey' } });
+  transaction.request.body = JSON.stringify({
+    author: 'Whiskey',
+    token: token1
+  });
   return done();
 });
 // 400
 before('Story > Update a Story > Example 2', (transaction, done) => {
   transaction.fullPath = `/stories/${testStory2Id}`;
-  transaction.request.headers['Authorization'] = authHeader1;
-  transaction.request.body = JSON.stringify(badRequest);
+  transaction.request.body = JSON.stringify({ token: token1, ...badRequest });
   return done();
 });
 // 401
 before('Story > Update a Story > Example 3', (transaction, done) => {
   transaction.fullPath = `/stories/${testStory2Id}`;
-  transaction.request.headers['Authorization'] = authHeader2;
-  transaction.request.body = JSON.stringify({ data: { author: 'Whiskey' } });
+  transaction.request.body = JSON.stringify({ author: 'Whiskey' });
   return done();
 });
 // 404
 before('Story > Update a Story > Example 4', (transaction, done) => {
   transaction.fullPath = `/stories/${fourOhFour}`;
-  transaction.request.headers['Authorization'] = authHeader1;
-  transaction.request.body = JSON.stringify({ data: { author: 'Whiskey' } });
+  transaction.request.body = JSON.stringify({
+    token: token1,
+    author: 'Whiskey'
+  });
   return done();
 });
 
@@ -418,30 +394,30 @@ before('Story > Update a Story > Example 4', (transaction, done) => {
 // 200
 before('Story > Delete a Story > Example 1', (transaction, done) => {
   transaction.fullPath = `/stories/${testStory2Id}`;
-  transaction.request.headers['Authorization'] = authHeader1;
+  transaction.request.body.token = token1;
   return done();
 });
 // 401
 before('Story > Delete a Story > Example 2', (transaction, done) => {
   transaction.fullPath = `/stories/${testStory1Id}`;
-  transaction.request.headers['Authorization'] = authHeader2;
+  transaction.request.body.token = token2;
   return done();
 });
 // 404
 before('Story > Delete a Story > Example 3', (transaction, done) => {
   transaction.fullPath = `/stories/${fourOhFour}`;
-  transaction.request.headers['Authorization'] = authHeader1;
+  transaction.request.body.token = token1;
   return done();
 });
 
 after('Story > Delete a Story > Example 3', (transaction, done) => {
   return axios
     .delete(`/stories/${testStory1Id}`, {
-      headers: { Authorization: authHeader1 }
+      token: token1
     })
     .then(() => {
       return axios.delete(`/users/${testUsername1}`, {
-        headers: { Authorization: authHeader1 }
+        token: token1
       });
     })
     .then(() => done())

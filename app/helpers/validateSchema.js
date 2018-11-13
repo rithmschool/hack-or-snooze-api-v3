@@ -19,25 +19,30 @@ function validateSchema(validation, type) {
             stories: 1
           };
           if (immutableFields[error.argument]) {
-            return `The field '${
+            return `The property '${
               error.argument
-            }' is immutable at this endpoint.`;
+            }' is immutable at this endpoint`;
           }
-          return `'${error.argument}' is an invalid ${type} attribute.`;
+          return `The property '${
+            error.argument
+          }' is not valid for ${type} objects`;
         }
         case 'pattern':
-          return `The ${error.property
+          return `The '${error.property
             .split('.')
-            .pop()} field only supports letters and numbers`;
+            .pop()}' property only supports letters and numbers`;
         default:
-          return error.stack.replace(/"/g, "'").replace('instance.', '');
+          return error.stack
+            .replace(/"/g, "'")
+            .replace(
+              'instance',
+              `${type[0].toUpperCase() + type.slice(1)} object`
+            );
       }
     });
 
-    return new APIError(400, 'Bad Request', `${errors.join('; ')}.`);
+    throw new APIError(400, 'Bad Request', `${errors.join('; ')}.`);
   }
-
-  return 'OK';
 }
 
 module.exports = validateSchema;

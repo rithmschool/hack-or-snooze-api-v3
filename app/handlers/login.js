@@ -8,17 +8,14 @@ const { User } = require('../models');
 const { APIError, formatResponse, validateSchema } = require('../helpers');
 const { loginSchema } = require('../schemas');
 
-async function auth(request, response, next) {
-  const validSchema = validateSchema(
-    validate(request.body, loginSchema),
-    'user'
-  );
-  if (validSchema !== 'OK') {
-    return next(validSchema);
-  }
-
+async function login(request, response, next) {
   try {
-    const user = await User.readUser(request.body.username);
+    validateSchema(validate(request.body, loginSchema), 'login');
+
+    const user = await User.readUser(request.body.username, {
+      username: 1,
+      password: 1
+    });
     const isValid = bcrypt.compareSync(request.body.password, user.password);
     if (!isValid) {
       throw new APIError(401, 'Unauthorized', 'Invalid password.');
@@ -33,4 +30,4 @@ async function auth(request, response, next) {
   }
 }
 
-module.exports = auth;
+module.exports = login;

@@ -1,1 +1,1 @@
-exports.authRequired = require('../middleware/authRequired');
+exports.authRequired = require('./authRequired');

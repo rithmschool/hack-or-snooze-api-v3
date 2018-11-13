@@ -17,6 +17,9 @@
       "id": "/properties/username",
       "minLength": 1,
       "maxLength": 55
+    },
+    "name": {
+      "type": "string"
     }
   },
   "required": ["password", "username"]

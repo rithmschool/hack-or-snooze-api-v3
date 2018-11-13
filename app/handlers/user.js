@@ -5,66 +5,60 @@ const { validate } = require('jsonschema');
 // app imports
 const { JWT_SECRET_KEY } = require('../config');
 const { User } = require('../models');
-const {
-  ensureCorrectUser,
-  formatResponse,
-  validateSchema
-} = require('../helpers');
+const { formatResponse, validateSchema, APIError } = require('../helpers');
 const { userNewSchema, userUpdateSchema } = require('../schemas');
 
-function readUser(request, response, next) {
-  const username = request.params.username;
-  return User.readUser(username)
-    .then(user => response.json(formatResponse(user)))
-    .catch(err => next(err));
+async function readUser(request, response, next) {
+  try {
+    const { username } = request.params;
+    const user = await User.readUser(username);
+    return response.json(formatResponse(user));
+  } catch (error) {
+    return next(error);
+  }
 }
 
-function updateUser(request, response, next) {
+async function updateUser(request, response, next) {
+  try {
+    const { username } = request.params;
+
+    validateSchema(validate(request.body, userUpdateSchema), 'user');
+
+    if (username !== request.username) {
+      throw new APIError(
+        403,
+        'Forbidden',
+        'You are not allowed to update other users.'
+      );
+    }
+    const user = await User.updateUser(username, request.body);
+    return response.json(formatResponse(user));
+  } catch (error) {
+    return next(error);
+  }
+}
+
+async function deleteUser(request, response, next) {
   const { username } = request.params;
-  const correctUser = ensureCorrectUser(
-    request.headers.authorization,
-    username
-  );
-  if (correctUser !== 'OK') {
-    return next(correctUser);
+  try {
+    if (username !== request.username) {
+      throw new APIError(
+        403,
+        'Forbidden',
+        'You are not allowed to update other users.'
+      );
+    }
+    const deletedMessage = await User.deleteUser(username);
+    return response.json(formatResponse(deletedMessage));
+  } catch (error) {
+    return next(error);
   }
-  const validSchema = validateSchema(
-    validate(request.body, userUpdateSchema),
-    'user'
-  );
-  if (validSchema !== 'OK') {
-    return next(validSchema);
-  }
-  return User.updateUser(username, request.body.data)
-    .then(user => response.json(formatResponse(user)))
-    .catch(err => next(err));
-}
-
-function deleteUser(request, response, next) {
-  const username = request.params.username;
-  const correctUser = ensureCorrectUser(
-    request.headers.authorization,
-    username
-  );
-  if (correctUser !== 'OK') {
-    return next(correctUser);
-  }
-  return User.deleteUser(username)
-    .then(user => response.json(formatResponse(user)))
-    .catch(err => next(err));
 }
 
 async function createUser(request, response, next) {
-  const validSchema = validateSchema(
-    validate(request.body, userNewSchema),
-    'user'
-  );
-  if (validSchema !== 'OK') {
-    return next(validSchema);
-  }
-
   try {
-    const newUser = await User.createUser(new User(request.body.data));
+    validateSchema(validate(request.body, userNewSchema), 'user');
+    const newUser = await User.createUser(new User(request.body));
     const userAndToken = {
       token: jwt.sign({ username: newUser.username }, JWT_SECRET_KEY),
       ...newUser
