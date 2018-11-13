@@ -1,26 +1,50 @@
 {
   "definitions": {},
-  "$schema": "http://json-schema.org/draft-06/schema#",
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "http://example.com/root.json",
   "type": "object",
-  "id": "/",
-  "additionalProperties": false,
+  "title": "The Root Schema",
+  "required": ["token", "user"],
   "properties": {
     "token": {
+      "$id": "#/properties/token",
       "type": "string",
-      "id": "/properties/token"
+      "title": "The Token Schema",
+      "default": "",
+      "examples": ["123"],
+      "pattern": "^(.*)$"
     },
-    "name": {
-      "type": "string",
-      "id": "/properties/name",
-      "minLength": 1,
-      "maxLength": 55
-    },
-    "password": {
-      "type": "string",
-      "id": "/properties/password",
-      "minLength": 1,
-      "maxLength": 55
+    "user": {
+      "$id": "#/properties/user",
+      "type": "object",
+      "title": "The User Schema",
+      "properties": {
+        "name": {
+          "$id": "#/properties/user/properties/name",
+          "type": "string",
+          "title": "The Name Schema",
+          "default": "",
+          "examples": ["Michael Hueter"],
+          "pattern": "^(.*)$"
+        },
+        "username": {
+          "$id": "#/properties/user/properties/username",
+          "type": "string",
+          "title": "The Username Schema",
+          "default": "",
+          "examples": ["hueter"],
+          "pattern": "^(.*)$"
+        },
+        "password": {
+          "$id": "#/properties/user/properties/password",
+          "type": "string",
+          "title": "The Password Schema",
+          "default": "",
+          "examples": ["foo123"],
+          "pattern": "^(.*)$"
+        }
+      },
+      "required": ["username", "password"]
     }
-  },
-  "required": ["token"]
+  }
 }

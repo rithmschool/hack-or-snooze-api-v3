@@ -31,9 +31,10 @@ storySchema.statics = {
    * @param {object} newStory - an instance of Story
    * @returns {Promise<Story, APIError>}
    */
-  async createStory(newStory) {
-    newStory.storyId = uuidv4();
+  async createStory(newStory, username) {
     try {
+      newStory.storyId = uuidv4();
+      newStory.username = username;
       const story = await newStory.save();
       return story.toObject();
     } catch (error) {

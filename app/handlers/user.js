@@ -31,7 +31,7 @@ async function updateUser(request, response, next) {
         'You are not allowed to update other users.'
       );
     }
-    const user = await User.updateUser(username, request.body);
+    const user = await User.updateUser(username, request.body.user);
     return response.json(formatResponse(user));
   } catch (error) {
     return next(error);

@@ -1,5 +1,8 @@
 {
-  "name": "Michael Hueter",
-  "username": "hueter",
-  "password": "foo123"
+  "token": "123",
+  "user": {
+    "name": "Michael Hueter",
+    "username": "hueter",
+    "password": "foo123"
+  }
 }

@@ -107,14 +107,17 @@ userSchema.statics = {
    * @param {String} limit - number of docs to limit by (for pagination)
    * @returns {Promise<Users, APIError>}
    */
-  async readUsers(query, fields = { password: 0 }, skip = 0, limit = 20) {
+  async readUsers(query, fields, skip = 0, limit = 20) {
     try {
-      const users = await this.find(query, { ...fields, password: 0 })
+      const users = await this.find(query, {
+        ...fields,
+        password: 0,
+        stories: 0,
+        favorites: 0
+      })
         .skip(skip)
         .limit(limit)
         .sort({ username: 1 })
-        .populate('favorites')
-        .populate('stories')
         .exec();
 
       if (users.length === 0) {

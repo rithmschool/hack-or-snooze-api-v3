@@ -1,40 +1,60 @@
 {
   "definitions": {},
-  "$schema": "http://json-schema.org/draft-06/schema#",
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "http://example.com/root.json",
   "type": "object",
-  "id": " ",
+  "title": "The Root Schema",
+  "required": ["token", "story"],
   "additionalProperties": false,
-  "required": ["author", "title", "url", "username", "token"],
   "properties": {
     "token": {
+      "$id": "#/properties/token",
       "type": "string",
-      "id": "/properties/token"
+      "title": "The Token Schema",
+      "default": "",
+      "examples": ["123"],
+      "pattern": "^(.*)$"
     },
-    "author": {
-      "type": "string",
-      "id": "/properties/author",
-      "minLength": 1,
-      "maxLength": 55
-    },
-    "title": {
-      "type": "string",
-      "id": "/properties/title",
-      "minLength": 1,
-      "maxLength": 75
-    },
-    "url": {
-      "type": "string",
-      "format": "uri",
-      "id": "/properties/url",
-      "minLength": 1,
-      "maxLength": 200
-    },
-    "username": {
-      "type": "string",
-      "pattern": "^[a-zA-Z0-9]*$",
-      "id": "/properties/username",
-      "minLength": 1,
-      "maxLength": 55
+    "story": {
+      "$id": "#/properties/story",
+      "type": "object",
+      "title": "The Story Schema",
+      "required": ["author", "title", "url"],
+      "additionalProperties": false,
+      "properties": {
+        "author": {
+          "$id": "#/properties/story/properties/author",
+          "type": "string",
+          "title": "The Author Schema",
+          "default": "",
+          "examples": ["Matt Lane"],
+          "pattern": "^(.*)$"
+        },
+        "title": {
+          "$id": "#/properties/story/properties/title",
+          "type": "string",
+          "title": "The Title Schema",
+          "default": "",
+          "examples": ["The best story ever"],
+          "pattern": "^(.*)$"
+        },
+        "url": {
+          "$id": "#/properties/story/properties/url",
+          "type": "string",
+          "title": "The Url Schema",
+          "default": "",
+          "examples": ["http://google.com"],
+          "pattern": "^(.*)$"
+        },
+        "username": {
+          "$id": "#/properties/story/properties/username",
+          "type": "string",
+          "title": "The Username Schema",
+          "default": "",
+          "examples": ["hueter"],
+          "pattern": "^(.*)$"
+        }
+      }
     }
   }
 }

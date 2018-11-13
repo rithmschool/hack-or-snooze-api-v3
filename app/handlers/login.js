@@ -22,7 +22,7 @@ async function login(request, response, next) {
     }
     const userAndToken = {
       token: jwt.sign({ username: user.username }, JWT_SECRET_KEY),
-      ...user
+      user
     };
     return response.json(formatResponse(userAndToken));
   } catch (error) {

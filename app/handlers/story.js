@@ -10,10 +10,14 @@ async function createStory(request, response, next) {
   try {
     validateSchema(validate(request.body, storyNewSchema), 'story');
 
-    const username = request.username;
+    const { username } = request;
+
     await User.readUser(username);
 
-    const newStory = await Story.createStory(new Story(request.body));
+    const newStory = await Story.createStory(
+      new Story(request.body.story),
+      username
+    );
     return response.status(201).json(formatResponse(newStory));
   } catch (error) {
     return next(error);
@@ -43,7 +47,7 @@ async function updateStory(request, response, next) {
         'You are not the user who posted this story so you cannot update it.'
       );
     }
-    const updatedStory = await Story.updateStory(storyId, request.body);
+    const updatedStory = await Story.updateStory(storyId, request.body.story);
     return response.json(formatResponse(updatedStory));
   } catch (error) {
     return next(error);
