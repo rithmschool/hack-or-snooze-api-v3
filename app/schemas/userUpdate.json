@@ -1,0 +1,26 @@
+{
+  "definitions": {},
+  "$schema": "http://json-schema.org/draft-06/schema#",
+  "type": "object",
+  "id": "/",
+  "additionalProperties": false,
+  "properties": {
+    "token": {
+      "type": "string",
+      "id": "/properties/token"
+    },
+    "name": {
+      "type": "string",
+      "id": "/properties/name",
+      "minLength": 1,
+      "maxLength": 55
+    },
+    "password": {
+      "type": "string",
+      "id": "/properties/password",
+      "minLength": 1,
+      "maxLength": 55
+    }
+  },
+  "required": ["token"]
+}

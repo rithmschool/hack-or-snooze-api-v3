@@ -1,0 +1,40 @@
+{
+  "definitions": {},
+  "$schema": "http://json-schema.org/draft-06/schema#",
+  "type": "object",
+  "id": " ",
+  "additionalProperties": false,
+  "required": ["author", "title", "url", "username", "token"],
+  "properties": {
+    "token": {
+      "type": "string",
+      "id": "/properties/token"
+    },
+    "author": {
+      "type": "string",
+      "id": "/properties/author",
+      "minLength": 1,
+      "maxLength": 55
+    },
+    "title": {
+      "type": "string",
+      "id": "/properties/title",
+      "minLength": 1,
+      "maxLength": 75
+    },
+    "url": {
+      "type": "string",
+      "format": "uri",
+      "id": "/properties/url",
+      "minLength": 1,
+      "maxLength": 200
+    },
+    "username": {
+      "type": "string",
+      "pattern": "^[a-zA-Z0-9]*$",
+      "id": "/properties/username",
+      "minLength": 1,
+      "maxLength": 55
+    }
+  }
+}
