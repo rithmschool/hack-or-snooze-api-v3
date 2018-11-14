@@ -429,7 +429,9 @@ There is no request body necessary.
                 "token": "YOUR TOKEN GOES HERE"
             }
 + Response 200 (application/json; charset=utf-8)
-    + Attributes (User)
+    + Attributes
+        + message: `Favorite Added Successfully!` (string, optional)
+        + user (User)
 
 + Request Unauthorized
 + Response 401 (application/json; charset=utf-8)
@@ -454,7 +456,9 @@ There is no request body necessary.
                 "token": "YOUR TOKEN GOES HERE"
             }
 + Response 200 (application/json; charset=utf-8)
-    + Attributes (User)
+    + Attributes
+        + message: `Favorite Deleted Successfully!` (string, optional)
+        + user (User)
 
 + Request Unauthorized
 + Response 401 (application/json; charset=utf-8)
