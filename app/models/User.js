@@ -66,10 +66,12 @@ userSchema.statics = {
           `No user '${username}' found.`
         );
       }
+      const deletedUser = user.toObject();
+      delete deletedUser.password;
+
       return {
-        status: 200,
-        title: 'User Deleted',
-        message: `User '${username}' successfully deleted.`
+        message: `User '${username}' successfully deleted.`,
+        user: deletedUser
       };
     } catch (error) {
       return Promise.reject(error);
@@ -96,7 +98,7 @@ userSchema.statics = {
       }
       return user.toObject();
     } catch (error) {
-      Promise.reject(error);
+      return Promise.reject(error);
     }
   },
   /**
@@ -125,7 +127,7 @@ userSchema.statics = {
       }
       return users.map(user => user.toObject());
     } catch (error) {
-      Promise.reject(error);
+      return Promise.reject(error);
     }
   },
   /**

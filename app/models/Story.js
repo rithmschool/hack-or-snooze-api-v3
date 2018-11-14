@@ -48,7 +48,7 @@ storySchema.statics = {
    */
   async deleteStory(storyId) {
     try {
-      const story = await this.findOneAndRemove({ storyId }).exec();
+      const story = await this.findOneAndRemove({ storyId });
 
       if (!story) {
         throw new APIError(
@@ -58,10 +58,10 @@ storySchema.statics = {
         );
       }
 
+      const deletedStory = story.toObject();
       return {
-        status: 200,
-        title: 'Story Deleted',
-        message: `Story with ID '${storyId}' successfully deleted.`
+        message: `Story with ID '${storyId}' successfully deleted.`,
+        story: deletedStory
       };
     } catch (error) {
       return Promise.reject(error);

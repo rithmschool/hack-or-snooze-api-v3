@@ -12,7 +12,7 @@ async function readUsers(request, response, next) {
       return next(limit);
     }
     const users = await User.readUsers({}, { password: 0 }, skip, limit);
-    return response.json(formatResponse(users));
+    return response.json(formatResponse({ users: users }));
   } catch (e) {
     return next(e);
   }

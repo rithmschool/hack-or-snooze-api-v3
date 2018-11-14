@@ -12,7 +12,7 @@ async function readStories(request, response, next) {
       return next(limit);
     }
     const stories = await Story.readStories({}, {}, skip, limit);
-    return response.json(formatResponse(stories));
+    return response.json(formatResponse({ stories: stories }));
   } catch (error) {
     return next(error);
   }

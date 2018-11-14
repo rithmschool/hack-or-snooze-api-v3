@@ -12,11 +12,14 @@ async function login(request, response, next) {
   try {
     validateSchema(validate(request.body, loginSchema), 'login');
 
-    const user = await User.readUser(request.body.username, {
+    const user = await User.readUser(request.body.user.username, {
       username: 1,
       password: 1
     });
-    const isValid = bcrypt.compareSync(request.body.password, user.password);
+    const isValid = bcrypt.compareSync(
+      request.body.user.password,
+      user.password
+    );
     if (!isValid) {
       throw new APIError(401, 'Unauthorized', 'Invalid password.');
     }

@@ -43,7 +43,8 @@
           "title": "The Url Schema",
           "default": "",
           "examples": ["http://google.com"],
-          "pattern": "^(.*)$"
+          "pattern": "^(.*)$",
+          "format": "uri"
         },
         "username": {
           "$id": "#/properties/story/properties/username",

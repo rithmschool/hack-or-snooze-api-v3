@@ -12,7 +12,7 @@ async function readUser(request, response, next) {
   try {
     const { username } = request.params;
     const user = await User.readUser(username);
-    return response.json(formatResponse(user));
+    return response.json(formatResponse({ user }));
   } catch (error) {
     return next(error);
   }
@@ -32,7 +32,7 @@ async function updateUser(request, response, next) {
       );
     }
     const user = await User.updateUser(username, request.body.user);
-    return response.json(formatResponse(user));
+    return response.json(formatResponse({ user }));
   } catch (error) {
     return next(error);
   }
@@ -58,10 +58,10 @@ async function deleteUser(request, response, next) {
 async function createUser(request, response, next) {
   try {
     validateSchema(validate(request.body, userNewSchema), 'user');
-    const newUser = await User.createUser(new User(request.body));
+    const newUser = await User.createUser(new User(request.body.user));
     const userAndToken = {
       token: jwt.sign({ username: newUser.username }, JWT_SECRET_KEY),
-      ...newUser
+      user: newUser
     };
     return response.status(201).json(formatResponse(userAndToken));
   } catch (error) {

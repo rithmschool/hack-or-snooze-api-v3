@@ -43,8 +43,7 @@
           "examples": ["foo123"],
           "pattern": "^(.*)$"
         }
-      },
-      "required": ["username", "password"]
+      }
     }
   }
 }

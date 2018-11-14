@@ -16,6 +16,9 @@ function formatResponse(json) {
     .sort()
     .reduce((obj, k) => {
       obj[k] = json[k];
+      if (typeof obj[k] === 'object' && !(obj[k] instanceof Date)) {
+        obj[k] = formatResponse(obj[k]);
+      }
       return obj;
     }, {});
 }

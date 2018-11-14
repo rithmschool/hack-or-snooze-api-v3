@@ -1,40 +1,43 @@
 {
   "definitions": {},
-  "$schema": "http://json-schema.org/draft-06/schema#",
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "http://example.com/root.json",
   "type": "object",
-  "id": "/",
+  "title": "The Root Schema",
+  "required": ["user"],
   "additionalProperties": false,
   "properties": {
-    "favorites": {
-      "type": "array",
-      "id": "/properties/favorites",
-      "minItems": 1,
-      "items": {
-        "type": "string",
-        "id": "/properties/favorites/items",
-        "minLength": 1,
-        "maxLength": 55
+    "user": {
+      "$id": "#/properties/user",
+      "type": "object",
+      "title": "The User Schema",
+      "required": ["username", "password", "name"],
+      "properties": {
+        "username": {
+          "$id": "#/properties/user/properties/username",
+          "type": "string",
+          "title": "The Username Schema",
+          "default": "",
+          "examples": ["hueter"],
+          "pattern": "^(.*)$"
+        },
+        "password": {
+          "$id": "#/properties/user/properties/password",
+          "type": "string",
+          "title": "The Password Schema",
+          "default": "",
+          "examples": ["foo"],
+          "pattern": "^(.*)$"
+        },
+        "name": {
+          "$id": "#/properties/user/properties/name",
+          "type": "string",
+          "title": "The Name Schema",
+          "default": "",
+          "examples": ["Michael Hueter"],
+          "pattern": "^(.*)$"
+        }
       }
-    },
-    "name": {
-      "type": "string",
-      "id": "/properties/name",
-      "minLength": 1,
-      "maxLength": 55
-    },
-    "password": {
-      "type": "string",
-      "id": "/properties/password",
-      "minLength": 1,
-      "maxLength": 55
-    },
-    "username": {
-      "type": "string",
-      "pattern": "^[a-zA-Z0-9]*$",
-      "id": "/properties/username",
-      "minLength": 1,
-      "maxLength": 55
     }
-  },
-  "required": ["name", "password", "username"]
+  }
 }

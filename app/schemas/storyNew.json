@@ -42,6 +42,7 @@
           "$id": "#/properties/story/properties/url",
           "type": "string",
           "title": "The Url Schema",
+          "format": "uri",
           "default": "",
           "examples": ["http://google.com"],
           "pattern": "^(.*)$"

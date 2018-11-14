@@ -18,7 +18,7 @@ async function createStory(request, response, next) {
       new Story(request.body.story),
       username
     );
-    return response.status(201).json(formatResponse(newStory));
+    return response.status(201).json(formatResponse({ story: newStory }));
   } catch (error) {
     return next(error);
   }
@@ -27,7 +27,7 @@ async function createStory(request, response, next) {
 async function readStory(request, response, next) {
   try {
     const story = await Story.readStory(request.params.storyId);
-    return response.json(formatResponse(story));
+    return response.json(formatResponse({ story: story }));
   } catch (error) {
     return next(error);
   }
@@ -48,7 +48,7 @@ async function updateStory(request, response, next) {
       );
     }
     const updatedStory = await Story.updateStory(storyId, request.body.story);
-    return response.json(formatResponse(updatedStory));
+    return response.json(formatResponse({ story: updatedStory }));
   } catch (error) {
     return next(error);
   }

@@ -49,7 +49,7 @@ See the [Reference section](/#reference/0/login) for fully-detailed resource doc
 
 &nbsp;
 
-#### 1. First, make a cURL GET request to read stories.
+#### 1. First, make a cURL GET request to get an array of stories.
 
 No authentication is required for this endpoint.
 
@@ -75,15 +75,13 @@ No authentication is required for this endpoint.
 
 &nbsp;
 
-#### 2. Next, let's create a user.
-
-No authentication needed yet.
+#### 2. Next, let's sign up and get a token.
 
 &nbsp;
 
 **Request**
 
-This is a [POST request to /signup](/#reference/0/users/create-a-new-user).
+This is a [POST request to /signup](/#reference/0/signup).
 
 ```
 curl -i \
@@ -97,49 +95,58 @@ curl -i \
 
 ```
 {
-    "createdAt": "2017-11-10T21:03:58.358Z",
+  "token": "YOUR_TOKEN_SHOWS_UP_HERE",
+  "user": {
     "favorites": [],
-    "stories": []
-    "name": "Test User",
+    "stories": [],
     "username": "test",
-    "updatedAt": "2017-11-10T21:03:58.358Z",
+    "name": "Test User",
+    "createdAt": "2018-11-13T23:21:49.128Z",
+    "updatedAt": "2018-11-13T23:21:49.128Z"
+  }
 }
 ```
 
-&nbsp;
-
-#### 4. Finally, let's look at our user document 
-
-Using the token, make a GET request to `/users/{username}`.
+Include the `token` for future requests.
 
 &nbsp;
 
-Insert the token in all future requests in the auth header like so:
-`Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...`
+#### 3. Create a New Story
+
+Using the token, make a POST request to `/stories`.
+
+&nbsp;
+
+For all future requests, the token can be placed either:
+
+    - in the query string (for `GET` requests, e.g. `/users/test?token=eyfasf...`)
+    - or in the request body (for `POST` and `PATCH` requests, e.g. `"token": "eyfasf"`)
 
 &nbsp;
 
 **Request**
 
-This is a [GET request to /users/test](/#reference/0/user/get-a-user).
+For this request, we will place the token in the body, since it is a [POST request to /stories](/#reference/0/stories).
 
 ```
 curl -i \
      -H "Content-Type: application/json" \
-     -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..." \
-      https://hack-or-snooze.herokuapp.com/users/test
+     -X POST \
+     -d '{"token":"PASTE_YOUR_TOKEN_HERE", "story": {"author":"Elie Schoppik","title":"Four Tips for Moving Faster as a Developer", "url": "https://www.rithmschool.com/blog/developer-productivity"} }' \
+      https://hack-or-snooze-v2.herokuapp.com/stories
 ```
 
 **Response**
 
 ```
 {
-    "updatedAt": "2017-11-10T21:03:58.358Z",
-    "createdAt": "2017-11-10T21:03:58.358Z",
-    "name": "Test User",
-    "username": "test",
-    "favorites": [],
-    "stories": []
+  "author": "Elie Schoppik",
+  "createdAt": "2018-11-13T23:39:31.654Z",
+  "storyId": "d7e15b2d-b8b0-477d-9d63-d23e7fb35d73",
+  "title": "Four Tips for Moving Faster as a Developer",
+  "updatedAt": "2018-11-13T23:39:31.654Z",
+  "url": "https://www.rithmschool.com/blog/developer-productivity",
+  "username": "test"
 }
 ```
 
@@ -150,17 +157,18 @@ See the [Reference section](/#reference/0/auth) below for fully-detailed resourc
 ---
 
 ## Login [/login]
-Endpoint for authenticating by getting a JWT from the server.
+Endpoint for logging in to get a token and see your profile.
 
 ### Login to Receive a Token [POST]
 
 + Request
-    + Attributes (Login)
+    + Attributes 
+        + user (Login)
 
 + Response 200 (application/json; charset=utf-8)
     + Attributes
-        + User
-        + token: `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Im1odWV0ZXIiLCJpYXQiOjE1MTAyMDcwMDl9.5oUeihYn2AkqGy6z3g5F5B46gWWgvGKilFr9S4gg-p4` (string, required) - JWT used to authenticate in the future. Put in `Authorization` request header like: `Bearer <TOKEN>`.
+        + token: `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Im1odWV0ZXIiLCJpYXQiOjE1MTAyMDcwMDl9.5oUeihYn2AkqGy6z3g5F5B46gWWgvGKilFr9S4gg-p4` (string, required) - JWT used to authenticate in the future.
+        + user (User)
 
 + Request Bad Request
     + Attributes (Login)
@@ -188,12 +196,13 @@ Endpoint for creating an account and getting a token from the server.
 ### Signup and Get a Token [POST]
 
 + Request
-    + Attributes (New User)
+    + Attributes
+        + user (New User)
 
 + Response 200 (application/json; charset=utf-8)
     + Attributes
-        + User
-        + token: `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Im1odWV0ZXIiLCJpYXQiOjE1MTAyMDcwMDl9.5oUeihYn2AkqGy6z3g5F5B46gWWgvGKilFr9S4gg-p4` (string, required) - JWT used to authenticate in the future. Put in `Authorization` request header like: `Bearer <TOKEN>`.
+        + user (User)
+        + token: `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Im1odWV0ZXIiLCJpYXQiOjE1MTAyMDcwMDl9.5oUeihYn2AkqGy6z3g5F5B46gWWgvGKilFr9S4gg-p4` (string, required) - JWT used to authenticate in the future.
 
 + Request Bad Request
     + Attributes (New User)
@@ -203,7 +212,6 @@ Endpoint for creating an account and getting a token from the server.
         + error (Bad Request)
 
 + Request Not Found
-    + Attributes (New User)
 + Response 404 (application/json; charset=utf-8)
     + Attributes
         + error (Not Found)
