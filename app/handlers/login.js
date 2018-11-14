@@ -23,10 +23,14 @@ async function login(request, response, next) {
     if (!isValid) {
       throw new APIError(401, 'Unauthorized', 'Invalid password.');
     }
+
+    const { password, ...userResp } = userAndToken;
+
     const userAndToken = {
       token: jwt.sign({ username: user.username }, JWT_SECRET_KEY),
-      user
+      user: userResp
     };
+
     return response.json(formatResponse(userAndToken));
   } catch (error) {
     return next(error);
