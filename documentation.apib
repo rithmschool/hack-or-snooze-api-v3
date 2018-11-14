@@ -218,6 +218,15 @@ Endpoint for logging in to get a token and see your profile.
 + Request
     + Attributes 
         + user (Login)
+    + Body
+
+            {
+                "user": {
+                    "username": "test",
+                    "password": "password"
+                }
+            }
+
 + Response 200 (application/json; charset=utf-8)
     + Attributes
         + token: `eyJhb...` (string, required) - JWT used to authenticate in the future.
@@ -253,6 +262,16 @@ Endpoint for creating an account and getting a token from the server.
 + Request
     + Attributes
         + user (New User)
+    + Body
+
+            {
+                "user": {
+                    "name": "Test User",
+                    "username": "test",
+                    "password": "password"
+                }
+            }
+
 
 + Response 200 (application/json; charset=utf-8)
     + Attributes
@@ -327,7 +346,16 @@ Endpoint for reading, updating, or deleting a single user.
 
 + Request
     + Attributes
-        + user (User)
+        + user (New User)
+    + Body
+
+            {
+                "token": "YOUR TOKEN GOES HERE",
+                "user": {
+                    "name": "A Changed Name"
+                }
+            }
+
 + Response 200 (application/json; charset=utf-8)
     + Attributes
         + user (User)
@@ -357,6 +385,14 @@ Endpoint for reading, updating, or deleting a single user.
 **Token Required. Correct User Required.** Remove a single user document by `username`.
 
 + Request
+    + Attributes
+        + token (string, required)
+    + Body
+
+            {
+                "token": "YOUR TOKEN GOES HERE"
+            }
+
 + Response 200 (application/json; charset=utf-8)
     + Attributes
         + message: `User successfully deleted` (string, optional)
@@ -385,6 +421,13 @@ Endpoint for reading, updating, or deleting a single user.
 There is no request body necessary.
 
 + Request
+    + Attributes
+        + token (string, required)
+    + Body
+
+            {
+                "token": "YOUR TOKEN GOES HERE"
+            }
 + Response 200 (application/json; charset=utf-8)
     + Attributes (User)
 
@@ -403,6 +446,13 @@ There is no request body necessary.
 There is no request body necessary.
 
 + Request
+    + Attributes
+        + token (string, required)
+    + Body
+
+            {
+                "token": "YOUR TOKEN GOES HERE"
+            }
 + Response 200 (application/json; charset=utf-8)
     + Attributes (User)
 
@@ -442,7 +492,20 @@ By default, `limit` is set to 25.
 
 + Request
     + Attributes 
-        + story (Story)
+        + story (New Story)
+    + Attributes
+        + token (string, required)
+    + Body
+
+            {
+                "token": "YOUR_TOKEN_HERE",
+                "story": {
+                    "author": "Matt Lane",
+                    "title": "The best story ever",
+                    "url": "http://google.com"
+                }
+            }
+
 + Response 201 (application/json; charset=utf-8)
     + Attributes 
         + story (Story)
@@ -470,7 +533,7 @@ Retrieve a single story document by `storyId`.
 + Request
 + Response 200 (application/json; charset=utf-8)
     + Attributes 
-        +story (Story)
+        + story (Story)
 
 + Request Not Found
 + Response 404 (application/json; charset=utf-8)
@@ -483,10 +546,20 @@ Retrieve a single story document by `storyId`.
 
 + Request
     + Attributes 
-        + story (Story)
+        + token (string, required)
+        + story (New Story)
+    + Body
+
+            {
+                "token": "YOUR_TOKEN_HERE",
+                "story": {
+                    "author": "Not Matt Lane"
+                }
+            }
+
 + Response 200 (application/json; charset=utf-8)
     + Attributes 
-        + story (Story)
+        + story (New Story)
 
 + Request Bad Request
     + Attributes 
@@ -513,6 +586,13 @@ Retrieve a single story document by `storyId`.
 **Token Required. Correct User Required.** Remove a single story document by `storyId`.
 
 + Request
+    + Attributes
+        + token (string, required)
+    + Body
+
+            {
+                "token": "YOUR_TOKEN_HERE"
+            }
 + Response 200 (application/json; charset=utf-8)
     + Attributes
         + message: `Story deleted successfully` (string, optional)
@@ -557,6 +637,12 @@ Retrieve a single story document by `storyId`.
   + updatedAt: `017-11-09T18:38:39.409Z`  (string, optional) - auto-generated timestamp of when the story was last updated.
   + url: `https://www.rithmschool.com/blog/do-web-developers-need-to-be-good-at-math` (string, optional) - the URL of the story. **Required to Create a New Story. Must Conform to URI Format.**
   + username: `hueter` (string, optional) - the user who posted the story. **Required to Create a New Story.**
+
+### New Story
+  + author: `Matt Lane` (string, optional) - the original author of the story. **Required to Create a New Story.**
+  + storyId: `5081e46e-3143-4c0c-bbf4-c22eb11eb3f5` (string, optional) - the auto-generated ID of the story used to reference story documents in routes.
+  + title: `The Best Story Ever` (string, optional) - the title of the story. **Required to Create a New Story.**
+  + url: `https://www.rithmschool.com/blog/do-web-developers-need-to-be-good-at-math` (string, optional) - the URL of the story. **Required to Create a New Story. Must Conform to URI Format.**
 
 ### Bad Request
   + status: 400 (number, required) - HTTP status code
