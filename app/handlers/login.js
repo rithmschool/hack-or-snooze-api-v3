@@ -14,7 +14,12 @@ async function login(request, response, next) {
 
     const user = await User.readUser(request.body.user.username, {
       username: 1,
-      password: 1
+      password: 1,
+      stories: 1,
+      favorites: 1,
+      name: 1,
+      createdAt: 1,
+      updatedAt: 1
     });
     const isValid = bcrypt.compareSync(
       request.body.user.password,
