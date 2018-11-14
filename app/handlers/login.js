@@ -24,7 +24,7 @@ async function login(request, response, next) {
       throw new APIError(401, 'Unauthorized', 'Invalid password.');
     }
 
-    const { password, ...userResp } = userAndToken;
+    const { password, ...userResp } = user;
 
     const userAndToken = {
       token: jwt.sign({ username: user.username }, JWT_SECRET_KEY),
