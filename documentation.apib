@@ -616,33 +616,32 @@ Retrieve a single story document by `storyId`.
   + password: `foo123` (string, optional) - between 1 and 55 characters. **Required to Login.**
 
 ### New User
-  + name: `Michael Hueter` (string, optional) - the user's full name, between 1 and 55 characters. **Required to Create a New User.**
-  + password: `foo123` (string, optional) - between 1 and 55 characters. **Required to Create a New User.**
-  + username: `hueter` (string, optional) - username can only consist of letters and numbers between 1 and 55 characters. **Required to Create a New User. Immutable.**
+  + name: `Michael Hueter` (string, optional) - the user's full name, between 1 and 55 characters. 
+  + password: `foo123` (string, optional) - between 1 and 55 characters. 
+  + username: `hueter` (string, optional) - username can only consist of letters and numbers between 1 and 55 characters. **Immutable.**
 
 ### User
   + createdAt: `017-11-09T18:38:39.409Z` (string, optional) - auto-generated timestamp of when the user was originally created.
   + favorites (array[Story], optional) - a list of stories that are the user's favorites
-  + name: `Michael Hueter` (string, optional) - the user's full name, between 1 and 55 characters. **Required to Create a New User.**
-  + password: `foo123` (string, optional) - between 1 and 55 characters. **Required to Create a New User.**
+  + name: `Michael Hueter` (string, optional) - the user's full name, between 1 and 55 characters. 
+  + password: `foo123` (string, optional) - between 1 and 55 characters. 
   + stories (array[Story], optional) - a list of stories that the user has published
   + updatedAt: `017-11-09T18:38:39.409Z`  (string, optional) - auto-generated timestamp of when the user was last updated.
-  + username: `hueter` (string, optional) - username can only consist of letters and numbers between 1 and 55 characters. **Required to Create a New User. Immutable.**
+  + username: `hueter` (string, optional) - username can only consist of letters and numbers between 1 and 55 characters. **Immutable.**
 
 ### Story
-  + author: `Matt Lane` (string, optional) - the original author of the story. **Required to Create a New Story.**
+  + author: `Matt Lane` (string, optional) - the original author of the story. 
   + createdAt: `017-11-09T18:38:39.409Z`  (string, optional) - auto-generated timestamp of when the story was originally created.
   + storyId: `5081e46e-3143-4c0c-bbf4-c22eb11eb3f5` (string, optional) - the auto-generated ID of the story used to reference story documents in routes.
-  + title: `The Best Story Ever` (string, optional) - the title of the story. **Required to Create a New Story.**
+  + title: `The Best Story Ever` (string, optional) - the title of the story. 
   + updatedAt: `017-11-09T18:38:39.409Z`  (string, optional) - auto-generated timestamp of when the story was last updated.
-  + url: `https://www.rithmschool.com/blog/do-web-developers-need-to-be-good-at-math` (string, optional) - the URL of the story. **Required to Create a New Story. Must Conform to URI Format.**
-  + username: `hueter` (string, optional) - the user who posted the story. **Required to Create a New Story.**
+  + url: `https://www.rithmschool.com/blog/do-web-developers-need-to-be-good-at-math` (string, optional) - the URL of the story. **Must Conform to URI Format.**
+  + username: `hueter` (string, optional) - the user who posted the story. 
 
 ### New Story
-  + author: `Matt Lane` (string, optional) - the original author of the story. **Required to Create a New Story.**
-  + storyId: `5081e46e-3143-4c0c-bbf4-c22eb11eb3f5` (string, optional) - the auto-generated ID of the story used to reference story documents in routes.
-  + title: `The Best Story Ever` (string, optional) - the title of the story. **Required to Create a New Story.**
-  + url: `https://www.rithmschool.com/blog/do-web-developers-need-to-be-good-at-math` (string, optional) - the URL of the story. **Required to Create a New Story. Must Conform to URI Format.**
+  + author: `Matt Lane` (string, optional) - the original author of the story. 
+  + title: `The Best Story Ever` (string, optional) - the title of the story. 
+  + url: `https://www.rithmschool.com/blog/do-web-developers-need-to-be-good-at-math` (string, optional) - the URL of the story. **Must Conform to URI Format.**
 
 ### Bad Request
   + status: 400 (number, required) - HTTP status code
