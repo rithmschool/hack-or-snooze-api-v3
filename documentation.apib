@@ -132,7 +132,7 @@ See the [Reference section](/#reference/0/auth) below for fully-detailed resourc
 ### Collections
 
 The API provides access to the following collections.
-Both collections have full CRUD operations.
+Both collections have full CRUD (Create, Read, Update, Delete) operations.
 
 #### Users
 
@@ -178,9 +178,16 @@ Example Payload:
 &nbsp;
 
 
-### Authentication
+## Authentication
 
 Many of the endpoints require a token to be accessed.
+
+The token can be placed either:
+
+- in the query string (for `GET` requests, e.g. `/users/test?token=eyfasf...`)
+- or in the request body (for `POST` and `PATCH` requests, e.g. `"token": "eyfasf"`)
+
+&nbsp;
 
 Here are endpoints that get you a token back:
 
@@ -269,10 +276,10 @@ Endpoint to create a user or query for a list of users.
 
 + Parameters
     + skip: 0 (number, optional) - the list of documents to skip over. Default is 0.
-    + limit: 10 (number, optional) - the number of documents to return. Default and maximum set to 50.
+    + limit: 10 (number, optional) - the number of documents to return. Default and maximum set to 25.
 
 ### Get a List of Users [GET]
-**Token Required**. Note: passwords are not visible at this endpoint. By default, `limit` is set to 50.
+**Token Required**. Note: passwords are not visible at this endpoint. By default, `limit` is set to 25.
     
 + Request
 + Response 200 (application/json; charset=utf-8)
@@ -416,10 +423,10 @@ Endpoint to create a story or query for a list of stories.
 
 + Parameters
     + skip: 0 (number, optional) - the list of documents to skip over. Default is 0.
-    + limit: 10 (number, optional) - the number of documents to return. Default and maximum set to 50.
+    + limit: 10 (number, optional) - the number of documents to return. Default and maximum set to 25.
 
 ### Get a List of Stories [GET]
-By default, `limit` is set to 50.
+By default, `limit` is set to 25.
 
 + Request
 + Response 200 (application/json; charset=utf-8)
