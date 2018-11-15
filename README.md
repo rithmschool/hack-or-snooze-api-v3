@@ -21,35 +21,18 @@ Full interactive API documentation available here:
 ### How to Run Locally
 
 1. `npm i`
-1. In a new tab, `mongod` (unless it's already running, e.g. `brew services
-   start mongodb`)
+1. In a new tab, `mongod` (unless it's already running, e.g. `brew services start mongodb`)
 1. In the first tab, `npm run dev`
 
 Server runs on http://localhost:5000 by default.
 
 You can also pass any environment variables in a `.env` file.
 
-### How to Run Tests
-
-[Dredd](http://dredd.org/en/latest/index.html) tests run by reading the
-documentation blueprint against a running server. It must be installed globally
-to run tests.
-
-```bash
-npm i -g dredd
-```
-
-After starting the database and server, run the commmand:
-
-```bash
-dredd documentation.apib http://localhost:5000 -f ./tests/api-hooks.js
-```
-
 ### Notes on Data Model
 
 We have two main entities: **User** and **Story**.
 
-1 User has many stories. 1 User also has many favorites (which are stories).
+1 User has many stories that they posted. Many users also have many favorites (which are stories).
 
 User `stories` and `favorites` exist as arrays of [Mongoose refs which are populated](http://mongoosejs.com/docs/populate.html) in the retrieval methods.
 
