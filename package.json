@@ -20,8 +20,8 @@
   "author": "Rithm School",
   "license": "ISC",
   "engines": {
-    "node": "8.11.3",
-    "npm": "6.4.1"
+    "node": "v11.10.0",
+    "npm": "6.9.0"
   },
   "bugs": {
     "url": "https://github.com/rithmschool/hack-or-snooze-api-v2/issues"
