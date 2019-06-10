@@ -3,6 +3,7 @@ const bodyParser = require('body-parser');
 const dotenv = require('dotenv');
 const express = require('express');
 const mongoose = require('mongoose');
+const cors = require('cors');
 Promise = require('bluebird'); // eslint-disable-line
 
 // app imports
@@ -37,19 +38,7 @@ app.use(bodyParser.json({ type: '*/*' }));
 app.use(bodyParserHandler); // error handling specific to body parser only
 
 // response headers setup
-app.use((request, response, next) => {
-  response.header('Access-Control-Allow-Origin', '*');
-  response.header(
-    'Access-Control-Allow-Headers',
-    'Origin, Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers, Authorization'
-  );
-  response.header(
-    'Access-Control-Allow-Methods',
-    'POST,GET,PATCH,DELETE,OPTIONS'
-  );
-  response.header('Content-Type', 'application/json');
-  return next();
-});
+app.use(cors());
 
 app.post('/signup', userHandler.createUser);
 app.post('/login', loginHandler);
