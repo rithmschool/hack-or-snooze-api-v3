@@ -1,5 +1,5 @@
 FORMAT: 1A
-HOST: https://hack-or-snooze-v2.herokuapp.com
+HOST: https://hack-or-snooze-v3.herokuapp.com
 
 # Hack or Snooze API
 
@@ -22,7 +22,7 @@ No authentication is required for this endpoint.
 
 **Request**
 
-`curl -i https://hack-or-snooze-v2.herokuapp.com/stories`
+`curl -i https://hack-or-snooze-v3.herokuapp.com/stories`
 
 **Response**
 
@@ -57,7 +57,7 @@ curl -i \
      -H "Content-Type: application/json" \
      -X POST \
      -d '{"user":{"name":"Test User","username":"test","password":"foo"}}' \
-      https://hack-or-snooze-v2.herokuapp.com/signup
+      https://hack-or-snooze-v3.herokuapp.com/signup
 ```
 
 **Response**
@@ -102,7 +102,7 @@ curl -i \
      -H "Content-Type: application/json" \
      -X POST \
      -d '{"token":"PASTE_YOUR_TOKEN_HERE", "story": {"author":"Elie Schoppik","title":"Four Tips for Moving Faster as a Developer", "url": "https://www.rithmschool.com/blog/developer-productivity"} }' \
-      https://hack-or-snooze-v2.herokuapp.com/stories
+      https://hack-or-snooze-v3.herokuapp.com/stories
 ```
 
 **Response**
