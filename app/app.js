@@ -41,7 +41,7 @@ app.use(bodyParserHandler); // error handling specific to body parser only
 app.use(cors());
 
 app.post('/signup', userHandler.createUser);
-app.post('/login', loginHandler);
+app.post('/login', loginHandler)
 app.use('/stories', storiesRouter);
 app.use('/users', usersRouter);
 app.get('*', fourOhFourHandler); // catch-all for 404 "Not Found" errors
