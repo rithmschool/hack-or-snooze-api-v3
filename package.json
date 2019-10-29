@@ -42,7 +42,7 @@
     "express": "^4.16.4",
     "jsonschema": "^1.2.4",
     "jsonwebtoken": "^8.3.0",
-    "mongoose": "^5.3.11",
+    "mongoose": "^5.7.5",
     "pm2": "^3.5.1",
     "uuid": "^3.3.2"
   }
