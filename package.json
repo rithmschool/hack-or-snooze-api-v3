@@ -28,7 +28,7 @@
   },
   "homepage": "https://github.com/rithmschool/hack-or-snooze-api#readme",
   "devDependencies": {
-    "axios": "^0.18.1",
+    "axios": "^0.21.1",
     "eslint": "^5.16.0",
     "faker": "^4.1.0",
     "locus": "^2.0.1"
